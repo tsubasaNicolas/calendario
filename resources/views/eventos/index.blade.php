@@ -37,19 +37,31 @@ href="{{ asset('fullcalendar/timegrid/main.css')}}">
                 click:function(){
                   //  alert("Hola Mundo");
                     $('#exampleModal').modal('toggle');
-                  }
+                    }
             }
         },
 
         dateClick:function(info){
+         
+          limpiarFormulario();
 
             $('#txtFecha').val(info.dateStr);
 
+            $("#btnAgregar").prop("disabled", true);  
+            $('#btnModificar').prop("disabled", false);  
+            $('#btnEliminar').prop("disabled", false);  
+
             $('#exampleModal').modal('toggle');
+
          //   console.log(info);
            // calendar.addEvent({ title:"evento ºx", date:info.dateStr});
         },
         eventClick:function(info){
+
+          $('#btnAgregar').prop("disabled",false);
+            $('#btnModificar').prop("disabled",true);
+            $('#btnEliminar').prop("disabled",true);  
+
             console.log(info);
             console.log(info.event.title);
 
@@ -66,8 +78,6 @@ href="{{ asset('fullcalendar/timegrid/main.css')}}">
            $('#txtId').val(info.event.id);
            $('#txtTitulo').val(info.event.title);
 
-           
-
            mes = (info.event.start.getMonth()+1);
            dia = (info.event.start.getDate());
            año = (info.event.start.getFullYear());
@@ -76,15 +86,17 @@ href="{{ asset('fullcalendar/timegrid/main.css')}}">
            dia=(dia<10)?"0"+dia:dia;
 
            minutos=(info.event.start.getMinutes());
+           hora=info.event.start.getHours()
+           
            minutos= (minutos<10)?"0"+minutos:minutos;
-           hora = (info.event.start.getHours()+":"+minutos);
-           
-      
-           
+           hora=(hora<10)?"0"+hora:hora;
+
+
+           horario = (hora+":"+minutos);
 
            $('#txtFecha').val(año+"-"+mes+"-"+dia);
            
-           $('#txtHora').val(hora);   
+           $('#txtHora').val(horario);   
            $('#txtColor').val(info.event.backgroundColor);   
            $('#txtDescripcion').val(info.event.extendedProps.descripcion);
 
@@ -166,7 +178,16 @@ href="{{ asset('fullcalendar/timegrid/main.css')}}">
                   
                   },
                   error:function(){ alert("hay un error");}
-              })
+              });
+      }
+      function limpiarFormulario(){
+           $('#txtId').val("");
+           $('#txtTitulo').val("");
+           $('#txtFecha').val("");
+           $('#txtHora').val("06:00");
+           $('#txtColor').val("");
+           $('#txtDescripcion').val("");
+
       }
 
     });
@@ -194,12 +215,14 @@ href="{{ asset('fullcalendar/timegrid/main.css')}}">
         
         </div>
         <div class="modal-body">
-            Id:
+          <div class="d-none">  
+          Id:
           <input type="text" name="txtId" id="txtId">
           <br>
           Fecha:
           <input type="text" name="txtFecha" id="txtFecha">
           <br>
+        </div>
           
           <div class="form-row">
 
@@ -210,7 +233,8 @@ href="{{ asset('fullcalendar/timegrid/main.css')}}">
         
         <div class="form-group col-md-4">
          <label for=""> Hora:</label>
-          <input type="text" class="form-control" name="txtHora" id="txtHora">
+          <input type="time" min="06:00" max="23:00" step="600"
+          class="form-control" name="txtHora" id="txtHora">
         </div>
 
         <div class="form-group col-md-12">
@@ -232,14 +256,13 @@ href="{{ asset('fullcalendar/timegrid/main.css')}}">
               <div id="btnAgregar" class="btn btn-success">Agregar</div>
             <div id="btnModificar" class="btn btn-warning">Modificar</div>
             <div id="btnEliminar" class="btn btn-danger">Eliminar</div>
-            <div id="btnCancelar" class="btn btn-default">Cancelar</div>
+            <div id="btnCancelar" data-dismiss="modal" class="btn btn-default">Cancelar</div>
 
         </div>
       </div>
     </div>
   </div>
-
-
+  <script src="https://code.jquery.com/jquery-3.5.0.js" integrity="sha256-r/AaFHrszJtwpe+tHyNi/XCfMxYpbsRg2Uqn0x3s2zc=" crossorigin="anonymous"></script>
 
 
 @endsection
